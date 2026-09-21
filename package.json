@@ -6,29 +6,16 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start --blocks-manifest",
-		"admin:start": "wp-scripts start admin/index.js --output-path=build/admin",
-		"admin:build": "wp-scripts build admin/index.js --output-path=build/admin"
+		"start": "wp-scripts start --blocks-manifest"
 	},
 	"devDependencies": {
-		"@types/react-beautiful-dnd": "^13.1.8",
 		"@wordpress/scripts": "^32.0.0"
 	},
 	"dependencies": {
-		"@emotion/react": "^11.14.0",
-		"@emotion/styled": "^11.14.1",
-		"@mui/icons-material": "^7.3.9",
-		"@mui/material": "^7.3.9",
-		"@mui/x-charts": "^8.28.0",
-		"@mui/x-data-grid": "^8.27.5",
-		"papaparse": "^5.5.3",
-		"react-beautiful-dnd": "^13.1.1",
+		"@wordpress/i18n": "^6.28.0",
 		"react-hook-form": "^7.72.0",
-		"react-router": "^7.13.1",
 		"slugify": "^1.6.8",
-		"zustand": "^5.0.12",
-		"@wordpress/block-editor": "latest",
-		"@wordpress/blocks": "latest",
-		"@wordpress/i18n": "latest"
+		"zod": "^4.6.5",
+		"zustand": "^5.0.12"
 	}
 }

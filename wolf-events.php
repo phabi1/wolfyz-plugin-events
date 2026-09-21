@@ -7,7 +7,7 @@ Description: This is not just a plugin, it symbolizes the hope and enthusiasm of
 Author: Phabi1
 Version: 0.0.1
 Author URI: http://www.rollerlesloups.fr/
-Requires plugins: wolf-billing,wolf
+Requires plugins: wolf
 */
 
 require __DIR__ . '/vendor/autoload.php';

@@ -23,14 +23,10 @@ class Plugin
 
     public function init()
     {
-        $admin = new Admin();
-        $admin->setup();
-
         $api = new Api();
         $api->setup();
 
         $this->registerBlocks();
-
     }
 
     public function registerBlocks()

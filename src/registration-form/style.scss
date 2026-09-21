@@ -1,12 +1,293 @@
-/**
- * The following styles get applied both on the front of your site
- * and in the editor.
- *
- * Replace them with your own styles or remove the file completely.
- */
-
 .wp-block-wolf-events-registration-form {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+	--we-bg: #ffffff;
+	--we-surface: #ffffff;
+	--we-border: #d8e4d8;
+	--we-muted: #5a6a5a;
+	--we-accent: #6c1414;
+	--we-accent-strong: #540f0f;
+	--we-accent-soft: #e4f4ea;
+	--we-danger: #9f1d1d;
+
+	background: var(--we-bg);
+	border: 1px solid var(--we-border);
+	padding: 1.5rem;
+}
+
+.stepper {
+	.stepper-header {
+		list-style: none;
+		padding: 0;
+		margin: 1.25rem 0;
+		display: grid;
+		gap: 0.75rem;
+		grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+
+		.stepper-step {
+			display: flex;
+			align-items: center;
+			gap: 0.7rem;
+			padding: 0.7rem 0.8rem;
+			background: rgba(255, 255, 255, 0.62);
+			border: 1px solid var(--we-accent);
+
+			.stepper-step-index {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 1.8rem;
+				height: 1.8rem;
+				background: var(--we-accent);
+				color: var(--we-accent-soft);
+				font-size: 0.85rem;
+				font-weight: 700;
+			}
+
+			.stepper-step.is-active {
+				border-color: var(--we-accent);
+				background: var(--we-accent-soft);
+			}
+
+			.stepper-step.is-active .stepper-step-index,
+			.stepper-step.is-done .stepper-step-index {
+				background: var(--we-accent);
+				color: #fff;
+			}
+
+			.stepper-step-label {
+				font-size: 0.95rem;
+				font-weight: 600;
+			}
+		}
+	}
+	.stepper-content {
+		margin: 1.25rem 0;
+	}
+	.stepper-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.8rem;
+		margin-top: 1rem;
+		flex-wrap: wrap;
+	}
+}
+
+.counter {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+
+	.counter-button {
+		appearance: none;
+		padding: 0.3rem 0.6rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+		cursor: pointer;
+		background: var(--we-danger);
+		color: var(--we-accent-soft);
+		transition:
+			transform 120ms ease,
+			background-color 120ms ease;
+		border: 0;
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+	.counter-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.counter-value {
+		font-size: 0.95rem;
+		font-weight: 600;
+		min-width: 2.5rem;
+		height: 2.5rem;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.field-wrapper {
+	margin-bottom: 1rem;
+
+	.field-label {
+		display: block;
+		font-size: 0.86rem;
+		font-weight: 600;
+		color: #2f3d2f;
+		margin-bottom: 0.35rem;
+
+		.required {
+			color: var(--we-danger);
+			margin-left: 0.25rem;
+		}
+	}
+
+	.field-hint {
+		font-size: 0.82rem;
+		color: var(--we-muted);
+		margin-top: 0.25rem;
+	}
+
+	.field-error {
+		font-size: 0.82rem;
+		color: var(--we-danger);
+		margin-top: 0.25rem;
+	}
+}
+
+.text-field {
+	width: 100%;
+	border: 1px solid #b8c8b8;
+	padding: 0.62rem 0.72rem;
+	font-size: 0.95rem;
+	background: #fff;
+	color: var(--we-text);
+}
+
+.custom-upload {
+	border: 1px dashed #cdcdcd;
+	background: #f7faf7;
+	padding: 0.75rem;
+
+	.custom-upload-input {
+		display: none;
+	}
+
+	.custom-upload-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+
+	.custom-upload-button,
+	.custom-upload-link {
+		appearance: none;
+		border: 1px solid var(--we-accent);
+		background: #fff;
+		color: var(--we-accent-strong);
+		padding: 0.4rem 0.65rem;
+		font-size: 0.86rem;
+		cursor: pointer;
+	}
+
+	.custom-upload-button:disabled,
+	.custom-upload-link:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.custom-upload-filename {
+		margin: 0.6rem 0 0;
+		font-size: 0.85rem;
+		color: var(--we-muted);
+	}
+}
+
+.address-field {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+
+	.address-field-row {
+		display: flex;
+		gap: 0.5rem;
+	}
+}
+
+.ui-details {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+
+	&.columns-2 {
+		grid-template-columns: 1fr 1fr;
+	}
+	&.columns-3 {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+	&.columns-4 {
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+	}
+
+	@media (max-width: 600px) {
+		grid-template-columns: 1fr !important;
+	}
+	.ui-detail-item {
+		.ui-detail-item-label {
+			font-size: 0.86rem;
+			font-weight: 600;
+			color: #2f3d2f;
+			margin-bottom: 0.25rem;
+		}
+
+		.ui-detail-item-value {
+			font-size: 0.95rem;
+			color: var(--we-text);
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.ticket-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	.ticket-item {
+		padding: 1rem;
+		border: 1px solid var(--we-border);
+		background: var(--we-surface);
+		margin-bottom: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		:last-child {
+			margin-bottom: 0;
+		}
+
+		.ticket-item-details {
+			flex: 1;
+
+			.ticket-item-limit {
+				margin-top: 0.2rem;
+				font-size: 0.82rem;
+				color: var(--we-muted);
+			}
+		}
+		.ticket-item-counter {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		.ticket-item-amount {
+			font-weight: 600;
+		}
+	}
+}
+
+.participant-card {
+	border: 1px solid var(--we-border);
+	background: var(--we-surface);
+	padding: 1rem;
+	margin-bottom: 1rem;
+
+	.participant-card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+
+		> * {
+			margin: 0;
+		}
+	}
 }

@@ -9,21 +9,10 @@ use Wolf\Core\Plugin;
 class Api implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
-    /**
-     * Summary of routesHelper
-     * @var Wolf\Core\Rest\Routes
-     */
-    private $restRoutesHelper;
 
     public function setup()
     {
         add_action('rest_api_init', function () {
-            $this->restRoutesHelper = Plugin::getContainer()->get('wolf.rest.routes');
-            $this->registerCheckoutRoutes();
-            $this->registerEventRoutes();
-            $this->registerSessionRoutes();
-            $this->registerTicketRoutes();
-            $this->registerParticipantRoutes();
             $this->registerRegistrationRoutes();
         });
     }
@@ -40,45 +29,6 @@ class Api implements ContainerAwareInterface
     {
         return $this->getContainer()->get($controllerName);
     }
-    protected function registerCheckoutRoutes()
-    {
-        $controller = $this->getController('wolf-events.controller.checkout');
-        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'checkouts', $controller);
-    }
-
-    protected function registerEventRoutes()
-    {
-        $controller = $this->getController('wolf-events.controller.event');
-        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'events', $controller);
-        register_rest_route('wolf-events/v1', '/events/(?P<id>\d+)/amount', [
-            'methods' => 'GET',
-            'callback' => [$controller, 'amountAction'],
-            'permission_callback' => '__return_true',
-        ]);
-    }
-
-    protected function registerSessionRoutes()
-    {
-        $controller = $this->getController('wolf-events.controller.session');
-        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'events/(?P<event_id>\d+)/sessions', $controller);
-    }
-
-    protected function registerTicketRoutes()
-    {
-        $controller = $this->getController('wolf-events.controller.ticket');
-        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'events/(?P<event_id>\d+)/tickets', $controller);
-    }
-
-    protected function registerParticipantRoutes()
-    {
-        $controller = $this->getController('wolf-events.controller.participant');
-        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'events/(?P<event_id>\d+)/participants', $controller);
-        register_rest_route('wolf-events/v1', '/events/(?P<event_id>\d+)/participants/print', [
-            'methods' => 'POST',
-            'callback' => [$controller, 'print'],
-            'permission_callback' => '__return_true',
-        ]);
-    }
 
     protected function registerRegistrationRoutes()
     {
@@ -94,6 +44,44 @@ class Api implements ContainerAwareInterface
             [
                 'methods' => 'POST',
                 'callback' => [$controller, 'register'],
+                'permission_callback' => function ($request) {
+                    $nonce = $request->get_header('X-WP-Nonce');
+
+                    if (! $nonce || ! wp_verify_nonce($nonce, 'wp_rest')) {
+                        return new \WP_Error('invalid_nonce', 'Nonce invalide', ['status' => 403]);
+                    }
+
+                    return true;
+                },
+            ]
+        );
+
+        register_rest_route(
+            'wolf-events/v1',
+            '/events/(?P<event_id>\d+)/upload-file',
+            [
+                'methods' => 'POST',
+                'callback' => [$controller, 'uploadFile'],
+                'permission_callback' => '__return_true',
+            ]
+        );
+
+        register_rest_route(
+            'wolf-events/v1',
+            '/events/(?P<event_id>\d+)/remove-file',
+            [
+                'methods' => 'POST',
+                'callback' => [$controller, 'removeFile'],
+                'permission_callback' => '__return_true',
+            ]
+        );
+
+        register_rest_route(
+            'wolf-events/v1',
+            '/events/(?P<event_id>\d+)/download-file',
+            [
+                'methods' => 'POST',
+                'callback' => [$controller, 'downloadFile'],
                 'permission_callback' => '__return_true',
             ]
         );

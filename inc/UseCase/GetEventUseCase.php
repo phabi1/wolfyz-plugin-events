@@ -2,20 +2,16 @@
 
 namespace Wolf\Events\UseCase;
 
-use Wolf\Core\Entity\EntityManager;
+use GuzzleHttp\Client;
 use Wolf\Core\UseCase\UseCaseInterface;
 
 class GetEventUseCase implements UseCaseInterface
 {
-    private $eventRepository;
+    private Client $client;
 
-    private $ticketRepository;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Client $client)
     {
-        $this->eventRepository = $entityManager->getRepository('wolf-events.event');
-
-        $this->ticketRepository = $entityManager->getRepository('wolf-events.ticket');
+        $this->client = $client;
     }
 
     public function execute(array $params = [])
@@ -26,14 +22,12 @@ class GetEventUseCase implements UseCaseInterface
             throw new \InvalidArgumentException('ID is required');
         }
 
-        $event = $this->eventRepository->findById($id);
-
-        if (!$event) {
-            throw new \RuntimeException('Event not found');
+        try {
+            $response = $this->client->get("/event/registration/{$id}/infos");
+            $event = json_decode($response->getBody()->getContents(), true);
+            return $event;
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Failed to get event', 0, $e);
         }
-
-        $event->tickets = $this->ticketRepository->find(['event_id' => ['eq' => $id]]);
-
-        return $event;
     }
 }

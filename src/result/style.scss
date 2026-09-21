@@ -1,12 +1,101 @@
-/**
- * The following styles get applied both on the front of your site
- * and in the editor.
- *
- * Replace them with your own styles or remove the file completely.
- */
+.wp-block-wolf-events-result.wolf-events-payment-result-wrapper {
+	--result-bg-start: #f6f8fc;
+	--result-bg-end: #eef4ff;
+	--result-card-bg: #ffffff;
+	--result-text: #0e2038;
+	--result-muted: #4f617e;
+	--result-border: #d6dfef;
+	--result-shadow: 0 20px 45px rgba(17, 37, 72, 0.15);
+	--result-accent: #1766ff;
+}
 
-.wp-block-wolf-events-result {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+.wolf-events-payment-result-card {
+	padding: 1.5rem;
+	border: 1px solid var(--result-border);
+	border-left: 6px solid var(--result-accent);
+	background: var(--result-card-bg);
+	box-shadow: var(--result-shadow);
+	color: var(--result-text);
+	position: relative;
+	overflow: hidden;
+}
+
+.wolf-events-payment-result-card::after {
+	content: '';
+	position: absolute;
+	inset: auto -60px -90px auto;
+	width: 12rem;
+	height: 12rem;
+	border-radius: 999px;
+	opacity: 0.18;
+	background: var(--result-accent);
+}
+
+.wolf-events-payment-result-card.is-success {
+	--result-accent: #0e9a63;
+}
+
+.wolf-events-payment-result-card.is-pending {
+	--result-accent: #dd8a00;
+}
+
+.wolf-events-payment-result-card.is-cancelled {
+	--result-accent: #6a778f;
+}
+
+.wolf-events-payment-result-card.is-error,
+.wolf-events-payment-result-card.is-invalid {
+	--result-accent: #c63232;
+}
+
+.wolf-events-payment-result-label {
+	margin: 0;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--result-accent);
+}
+
+.wolf-events-payment-result-title {
+	margin: 0.5rem 0 0;
+	font-size: clamp(1.35rem, 2.8vw, 1.8rem);
+	line-height: 1.25;
+	font-weight: 700;
+	color: var(--result-text);
+}
+
+.wolf-events-payment-result-message {
+	margin: 0.8rem 0 0;
+	font-size: 1rem;
+	line-height: 1.65;
+	color: var(--result-muted);
+}
+
+.wolf-events-payment-result-reference {
+	display: inline-block;
+	margin: 1rem 0 0;
+	padding: 0.45rem 0.7rem;
+	border-radius: 999px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	background: rgba(16, 53, 108, 0.08);
+	color: #16305b;
+}
+
+@media (max-width: 640px) {
+	.wp-block-wolf-events-result.wolf-events-payment-result-wrapper {
+		padding: 0.9rem;
+		border-radius: 14px;
+	}
+
+	.wolf-events-payment-result-card {
+		padding: 1.1rem;
+		border-left-width: 4px;
+	}
+
+	.wolf-events-payment-result-message {
+		font-size: 0.96rem;
+	}
 }

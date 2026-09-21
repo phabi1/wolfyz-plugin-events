@@ -9,31 +9,16 @@ class RegistrationController extends AbstractController
     public function infoAction($request)
     {
         $eventId = (int) $request->get_param('event_id');
+
         $useCaseBus = $this->getService('wolf.use_case_bus');
 
         try {
-            $event = $useCaseBus->execute('wolf-events.get_event', ['id' => $eventId]);
-        } catch (\RuntimeException $e) {
+            $res = $useCaseBus->execute('wolf-events.get_event', ['id' => $eventId]);
+        } catch (\Exception $e) {
             return new \WP_Error('event_not_found', 'Event not found', ['status' => 404]);
         }
 
-        return [
-            'event' => [
-                'id' => $event->id,
-                'title' => $event->title,
-                'participant_fields' => $event->participant_fields ?? [],
-            ],
-            'tickets' => array_map(function ($ticket) {
-                return [
-                    'id' => $ticket->id,
-                    'title' => $ticket->title,
-                    'amount' => $ticket->amount,
-                    'participant_fields' => $ticket->participant_fields ?? [],
-                    'participant_max' => $ticket->participant_max ?? null,
-                    'participant_nb' => $ticket->participant_nb ?? 0,
-                ];
-            }, $event->tickets ?? []),
-        ];
+        return $res;
     }
 
     public function registerAction($request)
@@ -41,13 +26,13 @@ class RegistrationController extends AbstractController
         $eventId = (int) $request->get_param('event_id');
         $data = $request->get_json_params();
 
-        $registration = $data['registration'] ?? [];
+        $contact = $data['contact'] ?? [];
 
-        if (empty($registration['firstname']) || empty($registration['lastname']) || empty($registration['email'])) {
+        if (empty($contact['firstname']) || empty($contact['lastname']) || empty($contact['email'])) {
             return new \WP_Error('invalid_data', 'Prénom, nom et email sont obligatoires', ['status' => 400]);
         }
 
-        if (!is_email($registration['email'])) {
+        if (!is_email($contact['email'])) {
             return new \WP_Error('invalid_email', 'Adresse email invalide', ['status' => 400]);
         }
 
@@ -67,13 +52,12 @@ class RegistrationController extends AbstractController
         try {
             $result = $useCaseBus->execute('wolf-events.register_to_event', [
                 'event_id' => $eventId,
-                'registration' => $registration,
+                'contact' => $contact,
                 'participants' => $participants,
             ]);
 
             return [
                 'success' => true,
-                'message' => 'Inscription réussie',
                 'payment_url' => $result['payment_url'] ?? null
             ];
         } catch (\Exception $e) {
@@ -81,5 +65,40 @@ class RegistrationController extends AbstractController
         }
 
 
+    }
+
+    public function uploadFileAction($request)
+    {
+        $eventId = (int) $request->get_param('event_id');
+        $file = $request->get_json_params()['file'] ?? null;
+        $mimeType = $request->get_json_params()['mime_type'] ?? null;
+
+        $res = $this->getService('wolf.use_case_bus')->execute('wolf-events.upload_file', [
+            'id' => $eventId,
+            'file' => $file,
+            'mime_type' => $mimeType
+        ]);
+
+        return $res;
+    }
+
+    public function removeFileAction($request)
+    {
+        $eventId = (int) $request->get_param('event_id');
+        $file = $request->get_json_params()['file'] ?? null;
+
+        $res = $this->getService('wolf.use_case_bus')->execute('wolf-events.remove_file', ['id' => $eventId, 'file' => $file]);
+
+        return $res;
+    }
+
+    public function downloadFileAction($request)
+    {
+        $eventId = (int) $request->get_param('event_id');
+        $file = $request->get_json_params()['file'] ?? null;
+
+        $res = $this->getService('wolf.use_case_bus')->execute('wolf-events.download_file', ['id' => $eventId, 'file' => $file]);
+
+        return $res;
     }
 }
