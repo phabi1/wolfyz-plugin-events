@@ -12,6 +12,7 @@
 		"@wordpress/scripts": "^32.0.0"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "^5.9.1",
 		"@wordpress/i18n": "^6.28.0",
 		"react-hook-form": "^7.72.0",
 		"slugify": "^1.6.8",

@@ -3,5 +3,5 @@ export type Participant = {
 	firstname: string;
 	lastname: string;
 	birthdate: string;
-	fields: Record<string, any>;
+	fields: Record< string, any >;
 };

@@ -4,5 +4,5 @@ export type TicketField = {
 	label: string;
 	description: string;
 	required: boolean;
-	options: Record<string, any>;
-}
+	options: Record< string, any >;
+};

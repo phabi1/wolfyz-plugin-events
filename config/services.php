@@ -43,4 +43,12 @@
         ],
         'shared' => false
     ],
+    'wolf-events.use_case.check_member_exists' => [
+        'class' => \Wolf\Events\UseCase\CheckMemberExistsUseCase::class,
+        'arguments' => ['@wolf-api.client'],
+        'tags' => [
+            ['name' => 'use_case', 'value' => 'wolf-events.check_member_exists']
+        ],
+        'shared' => false
+    ],
 ];

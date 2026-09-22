@@ -274,12 +274,14 @@
 	}
 }
 
-.participant-card {
+.ui-card {
 	border: 1px solid var(--we-border);
 	background: var(--we-surface);
 	padding: 1rem;
 	margin-bottom: 1rem;
+}
 
+.participant-card {
 	.participant-card-header {
 		display: flex;
 		justify-content: space-between;
@@ -290,4 +292,26 @@
 			margin: 0;
 		}
 	}
+}
+
+.we-registration-summary-total {
+	border: 1px solid var(--we-border);
+	padding: 1rem;
+	margin-bottom: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.we-registration-summary-checkbox-line {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 1rem 0;
+}
+
+.we-registration-summary-error {
+	color: var(--we-error);
+	font-size: 0.85rem;
+	margin: 0.5rem 0 0;
 }

@@ -1,5 +1,3 @@
-export function YesNo({ value }: { value: boolean }) {
-    return (
-        <span>{value ? "Oui" : "Non"}</span>
-    );
+export function YesNo( { value }: { value: boolean } ) {
+	return <span>{ value ? 'Oui' : 'Non' }</span>;
 }

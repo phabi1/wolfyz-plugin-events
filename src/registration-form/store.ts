@@ -1,20 +1,20 @@
-import { create } from "zustand";
-import { Ticket } from "./models/ticket";
-import { getRegistration } from "./services/registration";
-import { Participant } from "./models/participant";
-import { Contact } from "./models/contact";
+import { create } from 'zustand';
+import { Ticket } from './models/ticket';
+import { getRegistration } from './services/registration';
+import { Participant } from './models/participant';
+import { Contact } from './models/contact';
 
 function updateTicketLimit(
 	remainingTickets: number | null,
 	max: number | null,
-	quantity: number,
+	quantity: number
 ) {
 	let limit = null;
-	if (remainingTickets !== null && max !== null) {
-		limit = Math.min(remainingTickets, max - quantity);
-	} else if (max !== null) {
+	if ( remainingTickets !== null && max !== null ) {
+		limit = Math.min( remainingTickets, max - quantity );
+	} else if ( max !== null ) {
 		limit = max - quantity;
-	} else if (remainingTickets !== null) {
+	} else if ( remainingTickets !== null ) {
 		limit = remainingTickets;
 	}
 	return limit;
@@ -40,21 +40,21 @@ type State = {
 	submitted: boolean;
 	paymentUrl: string | null;
 
-	init: (id: number) => void;
-	setStep: (index: number) => void;
-	setLoading: (value: boolean) => void;
-	setSaving: (value: boolean) => void;
-	setQuantity: (ticketId: number, quantity: number) => void;
-	setParticipants: (value: Participant[]) => void;
-	setContact: (value: Contact) => void;
-	setSubmitted: (value: boolean) => void;
-	setError: (value: any) => void;
+	init: ( id: number ) => void;
+	setStep: ( index: number ) => void;
+	setLoading: ( value: boolean ) => void;
+	setSaving: ( value: boolean ) => void;
+	setQuantity: ( ticketId: number, quantity: number ) => void;
+	setParticipants: ( value: Participant[] ) => void;
+	setContact: ( value: Contact ) => void;
+	setSubmitted: ( value: boolean ) => void;
+	setError: ( value: any ) => void;
 };
 
-const store = create<State>((set) => ({
+const store = create< State >( ( set ) => ( {
 	id: 0,
 	event: {
-		title: "",
+		title: '',
 		registration_start: null,
 		registration_end: null,
 		participant_max: 0,
@@ -68,106 +68,109 @@ const store = create<State>((set) => ({
 	remainingTickets: 0,
 	participants: [],
 	contact: {
-		firstname: "",
-		lastname: "",
-		email: "",
-		phone: "",
-		message: "",
+		firstname: '',
+		lastname: '',
+		email: '',
+		phone: '',
+		message: '',
 	},
 	submitted: false,
 	paymentUrl: null,
-	init: (id: number) => {
-		set({ id });
-		set({
+	init: ( id: number ) => {
+		set( { id } );
+		set( {
 			step: 0,
 			tickets: [],
 			participants: [],
 			contact: {
-				firstname: "",
-				lastname: "",
-				email: "",
-				phone: "",
-				message: "",
+				firstname: '',
+				lastname: '',
+				email: '',
+				phone: '',
+				message: '',
 			},
 			submitted: false,
 			error: null,
 			paymentUrl: null,
-		});
-		set({ loading: true });
-		getRegistration(id).then((registration) => {
-			set({
+		} );
+		set( { loading: true } );
+		getRegistration( id ).then( ( registration ) => {
+			set( {
 				event: {
 					title: registration.event.title,
-					registration_start: registration.event.regstration_start || null,
-					registration_end: registration.event.regstration_end || null,
+					registration_start:
+						registration.event.regstration_start || null,
+					registration_end:
+						registration.event.regstration_end || null,
 					participant_max: registration.event.participant_max || 0,
 					participant_nb: registration.event.participant_nb,
 				},
 				loading: false,
-			});
+			} );
 			let remainingTickets = null;
-			if (registration.event.participant_max > 0) {
+			if ( registration.event.participant_max > 0 ) {
 				remainingTickets =
 					registration.event.participant_max -
 					registration.event.participant_nb;
 			}
-			set({
-				tickets: registration.tickets.map((ticket) => {
+			set( {
+				tickets: registration.tickets.map( ( ticket ) => {
 					let stock = updateTicketLimit(
 						remainingTickets,
 						ticket.participant_max,
-						ticket.participant_nb,
+						ticket.participant_nb
 					);
 
 					return {
 						id: ticket.id,
 						title: ticket.title,
 						amount: ticket.amount,
+						member_only: Boolean( ticket.member_only ),
 						fields: ticket.fields || [],
 						quantity: 0,
 						limit: stock,
 						stock: stock,
 					};
-				}),
+				} ),
 				remainingTickets,
-			});
-		});
+			} );
+		} );
 	},
-	setStep: (step) => set({ step }),
-	setLoading: (loading) => set({ loading }),
-	setSaving: (saving) => set({ saving }),
-	setError: (error) => set({ error }),
-	setQuantity: (ticketId: number, quantity: number) =>
-		set((state) => {
-			const nextTickets = state.tickets.map((ticket) => {
+	setStep: ( step ) => set( { step } ),
+	setLoading: ( loading ) => set( { loading } ),
+	setSaving: ( saving ) => set( { saving } ),
+	setError: ( error ) => set( { error } ),
+	setQuantity: ( ticketId: number, quantity: number ) =>
+		set( ( state ) => {
+			const nextTickets = state.tickets.map( ( ticket ) => {
 				return ticket.id === ticketId
 					? {
 							...ticket,
 							quantity,
 					  }
 					: ticket;
-			});
+			} );
 
 			return {
 				tickets: nextTickets,
-				participants: nextTickets.reduce<any[]>((acc, ticket) => {
-					for (let i = 0; i < (ticket.quantity || 0); i++) {
-						acc.push({
+				participants: nextTickets.reduce< any[] >( ( acc, ticket ) => {
+					for ( let i = 0; i < ( ticket.quantity || 0 ); i++ ) {
+						acc.push( {
 							ticket_id: ticket.id,
-							firstname: "",
-							lastname: "",
-							birthdate: "",
+							firstname: '',
+							lastname: '',
+							birthdate: '',
 							fields: {},
-						});
+						} );
 					}
 
 					return acc;
-				}, [] as Participant[]),
+				}, [] as Participant[] ),
 			};
-		}),
-	setParticipants: (participants) => set({ participants }),
-	setContact: (contact) => set({ contact }),
-	setSubmitted: (submitted) => set({ submitted }),
-}));
+		} ),
+	setParticipants: ( participants ) => set( { participants } ),
+	setContact: ( contact ) => set( { contact } ),
+	setSubmitted: ( submitted ) => set( { submitted } ),
+} ) );
 
 export const useRegistrationStore = store;

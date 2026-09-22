@@ -1,4 +1,4 @@
-import { TicketField } from "./ticket-field";
+import { TicketField } from './ticket-field';
 
 export type Ticket = {
 	id: number;
@@ -6,5 +6,6 @@ export type Ticket = {
 	quantity: number;
 	stock: number | null;
 	amount: number;
-	fields: TicketField[]
+	member_only: boolean;
+	fields: TicketField[];
 };

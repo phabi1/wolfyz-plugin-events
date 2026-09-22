@@ -101,4 +101,25 @@ class RegistrationController extends AbstractController
 
         return $res;
     }
+
+    public function checkMemberAction($request)
+    {
+        $eventId = (int) $request->get_param('event_id');
+        $requestData = [
+            'event_id' => $eventId,
+            'firstname' => (string) $request->get_param('firstname'),
+            'lastname' => (string) $request->get_param('lastname'),
+            'birthdate' => (string) $request->get_param('birthdate'),
+        ];
+
+        if ($requestData['firstname'] === '' || $requestData['lastname'] === '' || $requestData['birthdate'] === '') {
+            return new \WP_Error('invalid_data', 'Firstname, lastname and birthdate are required', ['status' => 400]);
+        }
+
+        try {
+            return $this->getService('wolf.use_case_bus')->execute('wolf-events.check_member_exists', $requestData);
+        } catch (\Throwable $e) {
+            return new \WP_Error('member_check_error', $e->getMessage(), ['status' => 400]);
+        }
+    }
 }

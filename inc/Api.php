@@ -85,5 +85,15 @@ class Api implements ContainerAwareInterface
                 'permission_callback' => '__return_true',
             ]
         );
+
+        register_rest_route(
+            'wolf-events/v1',
+            '/events/(?P<event_id>\d+)/check-member',
+            [
+                'methods' => 'GET',
+                'callback' => [$controller, 'checkMember'],
+                'permission_callback' => '__return_true',
+            ]
+        );
     }
 }

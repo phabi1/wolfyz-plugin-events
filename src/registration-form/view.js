@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { RegistrationApp } from './RegistrationApp';
-import {setNonce} from './services/registration';
+import { setNonce } from './services/registration';
 
 document
 	.querySelectorAll( '.wp-block-wolf-events-registration-form' )

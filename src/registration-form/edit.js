@@ -34,7 +34,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				) : (
 					<p>
 						{ __(
-							"Veuillez sélectionner un événement dans le panneau latéral.",
+							'Veuillez sélectionner un événement dans le panneau latéral.',
 							'registration-form'
 						) }
 					</p>

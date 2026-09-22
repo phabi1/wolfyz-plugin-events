@@ -1,4 +1,4 @@
-import type { TicketField } from "../models/ticket-field";
+import type { TicketField } from '../models/ticket-field';
 
 type EventRegistrationInfo = {
 	event: {
@@ -15,6 +15,7 @@ type EventRegistrationInfo = {
 		id: number;
 		title: string;
 		amount: number;
+		member_only: boolean;
 		fields: TicketField[];
 		participant_max: number;
 		participant_nb: number;
@@ -34,7 +35,7 @@ type EventRegistrationRequest = {
 		lastname: string;
 		birthdate: string;
 		ticket_id: number;
-		fields: Record<string, any>;
+		fields: Record< string, any >;
 	}[];
 };
 
@@ -44,24 +45,31 @@ type EventRegistrationResponse = {
 	errors: string[];
 };
 
+type MemberExistsResponse = {
+	exists: boolean;
+	id?: number | null;
+	member?: Record< string, any > | null;
+	suggestions?: any[];
+};
+
 let nonce: string | null = null;
 
-export function setNonce(value: string) {
+export function setNonce( value: string ) {
 	nonce = value;
 }
 
-const endpoint = "/wp-json/wolf-events/v1/events";
+const endpoint = '/wp-json/wolf-events/v1/events';
 
 export async function getRegistration(
-	eventId: number,
-): Promise<EventRegistrationInfo> {
-	const response = await fetch(`${endpoint}/${eventId}/registration`, {
-		method: "GET",
+	eventId: number
+): Promise< EventRegistrationInfo > {
+	const response = await fetch( `${ endpoint }/${ eventId }/registration`, {
+		method: 'GET',
 		headers: {
-			"Content-Type": "application/json",
-			"X-WP-Nonce": nonce || "",
+			'Content-Type': 'application/json',
+			'X-WP-Nonce': nonce || '',
 		},
-	});
+	} );
 
 	const data = response.json();
 	return data;
@@ -69,17 +77,47 @@ export async function getRegistration(
 
 export async function registerToEvent(
 	eventId: number,
-	payload: EventRegistrationRequest,
-): Promise<EventRegistrationResponse> {
-	const response = await fetch(`${endpoint}/${eventId}/register`, {
-		method: "POST",
+	payload: EventRegistrationRequest
+): Promise< EventRegistrationResponse > {
+	const response = await fetch( `${ endpoint }/${ eventId }/register`, {
+		method: 'POST',
 		headers: {
-			"Content-Type": "application/json",
-			"X-WP-Nonce": nonce || "",
+			'Content-Type': 'application/json',
+			'X-WP-Nonce': nonce || '',
 		},
-		body: JSON.stringify(payload),
-	});
+		body: JSON.stringify( payload ),
+	} );
 
 	const data = response.json();
+	return data;
+}
+
+export async function checkMemberExists(
+	eventId: number,
+	payload: { firstname: string; lastname: string; birthdate: string }
+): Promise< MemberExistsResponse > {
+	const query = new URLSearchParams( {
+		firstname: payload.firstname,
+		lastname: payload.lastname,
+		birthdate: payload.birthdate,
+	} );
+
+	const response = await fetch(
+		`${ endpoint }/${ eventId }/check-member?${ query.toString() }`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-WP-Nonce': nonce || '',
+			},
+		}
+	);
+
+	const data = await response.json();
+
+	if ( ! response.ok ) {
+		throw new Error( data?.message || 'member_check_failed' );
+	}
+
 	return data;
 }
