@@ -14,6 +14,7 @@ class Api implements ContainerAwareInterface
     {
         add_action('rest_api_init', function () {
             $this->registerRegistrationRoutes();
+            $this->registerMyRegistrationsRoutes();
         });
     }
 
@@ -28,6 +29,23 @@ class Api implements ContainerAwareInterface
     public function getController($controllerName)
     {
         return $this->getContainer()->get($controllerName);
+    }
+
+    /**
+     * Registrations of the signed-in user ("My registrations" block). Cookie
+     * authentication: WordPress requires the X-WP-Nonce header to set the user.
+     */
+    protected function registerMyRegistrationsRoutes()
+    {
+        $controller = $this->getController('wolf-events.controller.my_registrations');
+        register_rest_route('wolf-events/v1', '/me/registrations', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'list'],
+            'permission_callback' => function () {
+                return is_user_logged_in()
+                    ?: new \WP_Error('not_connected', 'Connexion requise.', ['status' => 401]);
+            },
+        ]);
     }
 
     protected function registerRegistrationRoutes()

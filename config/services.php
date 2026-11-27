@@ -2,6 +2,16 @@
     'wolf-events.controller.registration' => [
         'class' => \Wolf\Events\Controller\RegistrationController::class
     ],
+    'wolf-events.controller.my_registrations' => [
+        'class' => \Wolf\Events\Controller\MyRegistrationsController::class
+    ],
+    'wolf-events.use_case.get_my_registrations' => [
+        'class' => \Wolf\Events\UseCase\GetMyRegistrationsUseCase::class,
+        'tags' => [
+            ['name' => 'use_case', 'value' => 'wolf-events.get_my_registrations']
+        ],
+        'shared' => false
+    ],
     'wolf-events.use_case.get_event' => [
         'class' => \Wolf\Events\UseCase\GetEventUseCase::class,
         'arguments' => ['@wolf-api.client'],
