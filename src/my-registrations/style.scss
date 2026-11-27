@@ -1,0 +1,80 @@
+.wp-block-wolf-events-my-registrations {
+	--we-border: #d8e4d8;
+	--we-muted: #5a6a5a;
+	--we-accent: #6c1414;
+	--we-success: #1f6b3a;
+	--we-success-soft: #e4f4ea;
+	--we-warning: #8a5a00;
+	--we-warning-soft: #fdf3dc;
+
+	.we-my-registrations__section + .we-my-registrations__section {
+		margin-top: 2rem;
+	}
+
+	.we-my-registrations__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1rem;
+	}
+
+	.we-my-registrations__item {
+		border: 1px solid var(--we-border);
+		padding: 1rem 1.25rem;
+		background: #fff;
+	}
+
+	.we-my-registrations__header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.we-my-registrations__title {
+		margin: 0;
+	}
+
+	.we-my-registrations__status {
+		font-size: 0.85em;
+		padding: 0.15rem 0.6rem;
+		border-radius: 999px;
+		color: var(--we-muted);
+		background: #f1f1f1;
+
+		&.is-paid {
+			color: var(--we-success);
+			background: var(--we-success-soft);
+		}
+
+		&.is-pending {
+			color: var(--we-warning);
+			background: var(--we-warning-soft);
+		}
+	}
+
+	.we-my-registrations__dates,
+	.we-my-registrations__ticket {
+		color: var(--we-muted);
+	}
+
+	.we-my-registrations__participants {
+		margin: 0.5rem 0;
+		padding-left: 1.2rem;
+	}
+
+	.we-my-registrations__amount {
+		margin: 0;
+	}
+
+	.we-my-registrations__message.is-error {
+		color: #9f1d1d;
+	}
+
+	.we-my-registrations__login {
+		color: var(--we-accent);
+		font-weight: 600;
+	}
+}
